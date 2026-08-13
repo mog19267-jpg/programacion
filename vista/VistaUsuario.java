@@ -59,6 +59,13 @@ public class VistaUsuario extends JFrame {
         initContenidoPanel();
         //Cargar los datos de la tabla de usuarios desde la base de datos
         cargarDatosTablaUsuarios();
+      //Agregar los eventos a los botones
+        btnAgregarUsuario.addActionListener(e -> agregarUsuario());
+        btnEditarUsuario.addActionListener(e -> editarUsuario());
+        btnEliminarUsuario.addActionListener(e -> eliminarUsuario());
+        btnBuscarUsuario.addActionListener(e -> buscarUsuario());
+        btnSalir.addActionListener(e -> System.exit(0));
+
     }//Final de initComponents
 
     //Metodo para el panel de encabezado, que incluya los botones para agregar, editar y eliminar y buscar usuarios
@@ -197,6 +204,117 @@ public class VistaUsuario extends JFrame {
         //agregar el modelo de la tabla a la tabla de usuarios
         tablaUsuarios.setModel(modeloTablaUsuarios);
     }
+    // Metodo para agregar un usuario a la base de datos desde la ventana y actualizar la tabla de usuarios
+    public void agregarUsuario() {
+        //crear una instancia de UsuarioDAO para agregar el usuario a la base de datos
+        modelo.UsuarioDAO usuarioDAO = new modelo.UsuarioDAO();
+        //crear una instancia de usuario con los datos del formulario
+        modelo.usuario nuevoUsuario = new modelo.usuario();
+        nuevoUsuario.setNombre(txtNombre.getText());
+        nuevoUsuario.setApellidoPaterno(txtApellidoPaterno.getText());
+        nuevoUsuario.setApellidoMaterno(txtApellidoMaterno.getText());
+        nuevoUsuario.setCorreo(txtCorreo.getText());
+        //Llamar al metodo agregarUsuario de UsuarioDAO para agregar el usuario a la base de datos
+        boolean exito = usuarioDAO.agregarUsuario(nuevoUsuario);
+        //Mostrar un mensaje de exito o error segun sea el caso
+        if (!exito) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Usuario agregado correctamente.");
+            //Limpiar el formulario
+            txtIdUsuario.setText("");
+            txtNombre.setText("");
+            txtApellidoPaterno.setText("");
+            txtApellidoMaterno.setText("");
+            txtCorreo.setText("");
+            //Actualizar la tabla de usuarios
+            cargarDatosTablaUsuarios();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al agregar el usuario: " + usuarioDAO.getMensaje());
+        }
+        //Actualizar la tabla de usuarios
+        cargarDatosTablaUsuarios();
+    }//Final del metodo agregarUsuario
+
+    //Metodo para editar un usuario de la base de datos desde la ventana y actualizar la tabla de usuarios
+    public void editarUsuario() {
+        //crear una instancia de UsuarioDAO para editar el usuario en la base de datos
+        modelo.UsuarioDAO usuarioDAO = new modelo.UsuarioDAO();
+        //crear una instancia de usuario con los datos del formulario
+        modelo.usuario usuarioExistente = new modelo.usuario();
+        usuarioExistente.setIdUsuario(Integer.parseInt(txtIdUsuario.getText()));
+        usuarioExistente.setNombre(txtNombre.getText());
+        usuarioExistente.setApellidoPaterno(txtApellidoPaterno.getText());
+        usuarioExistente.setApellidoMaterno(txtApellidoMaterno.getText());
+        usuarioExistente.setCorreo(txtCorreo.getText());
+        //Llamar al metodo actualizarUsuario de UsuarioDAO para editar el usuario en la base de datos
+        boolean exito = usuarioDAO.actualizarUsuario(usuarioExistente);
+        //Mostrar un mensaje de exito o error segun sea el caso
+        if (!exito) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Usuario actualizado correctamente.");
+            //Limpiar el formulario
+            txtIdUsuario.setText("");
+            txtNombre.setText("");
+            txtApellidoPaterno.setText("");
+            txtApellidoMaterno.setText("");
+            txtCorreo.setText("");
+            //Actualizar la tabla de usuarios
+            cargarDatosTablaUsuarios();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al actualizar el usuario: " + usuarioDAO.getMensaje());
+        }
+        //Actualizar la tabla de usuarios
+        cargarDatosTablaUsuarios();
+    }//Final del metodo editarUsuario
+    //metodo para elimnar un usuario con el ID ingresado fromulario y que lo elimine corectamente solo con el id usuario y actualice la tabla de usuarios
+    public void eliminarUsuario() {
+        //crear una instancia de UsuarioDAO para eliminar el usuario en la base de datos
+        modelo.UsuarioDAO usuarioDAO = new modelo.UsuarioDAO();
+        //obtener el id del usuario a eliminar desde el formulario
+        int idUsuario = Integer.parseInt(txtIdUsuario.getText());
+        //Llamar al metodo eliminarUsuario de UsuarioDAO para eliminar el usuario en la base de datos
+        boolean exito = usuarioDAO.eliminarUsuario(idUsuario);
+        //Mostrar un mensaje de exito o error segun sea el caso
+        if (!exito) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Usuario eliminado correctamente.");
+            //Limpiar el formulario
+            txtIdUsuario.setText("");
+            txtNombre.setText("");
+            txtApellidoPaterno.setText("");
+            txtApellidoMaterno.setText("");
+            txtCorreo.setText("");
+            //Actualizar la tabla de usuarios
+            cargarDatosTablaUsuarios();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al eliminar el usuario: " + usuarioDAO.getMensaje());
+        }
+        //Actualizar la tabla de usuarios
+        cargarDatosTablaUsuarios();
+    }//Final del metodo eliminarUsuario
+  
+
+    //Metodo para buscar un usuario con el ID  ingresado en el txtBuscarUsuario y dale en el boton buscarUsuario y que lo muestre en el formulario y actualice la tabla de usuarios
+    public void buscarUsuario() {
+        //crear una instancia de UsuarioDAO para buscar el usuario en la base de datos
+        modelo.UsuarioDAO usuarioDAO = new modelo.UsuarioDAO();
+        //obtener el id del usuario a buscar desde el formulario
+        int idUsuario = Integer.parseInt(txtBuscarUsuario.getText());
+        //Llamar al metodo consultarUsuarioPorId de UsuarioDAO para buscar el usuario en la base de datos
+        modelo.usuario usuarioEncontrado = usuarioDAO.obtenerUsuario(idUsuario);
+        //Mostrar un mensaje de exito o error segun sea el caso
+        if (usuarioEncontrado != null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Usuario encontrado correctamente.");
+            //Mostrar los datos del usuario encontrado en el formulario
+            txtIdUsuario.setText(String.valueOf(usuarioEncontrado.getIdUsuario()));
+            txtNombre.setText(usuarioEncontrado.getNombre());
+            txtApellidoPaterno.setText(usuarioEncontrado.getApellidoPaterno());
+            txtApellidoMaterno.setText(usuarioEncontrado.getApellidoMaterno());
+            txtCorreo.setText(usuarioEncontrado.getCorreo());
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al buscar el usuario: " + usuarioDAO.getMensaje());
+        }
+        //Actualizar la tabla de usuarios
+        cargarDatosTablaUsuarios();
+    }//Final del metodo buscarUsuario
+    
     //Metodo main para ejecutar la ventana
     public static void main(String[] args) {
         //Crear una instancia de VistaUsuario y hacerla visible

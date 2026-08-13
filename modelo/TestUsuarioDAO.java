@@ -6,7 +6,14 @@ public class TestUsuarioDAO {
     public static void main(String[] args) {
          // obtener todos los usuarios 
           UsuarioDAO usuarioDAO = new UsuarioDAO();
-         List<usuario> usuarios = usuarioDAO.obtenerUsuarios();
+     //buscar un usuario por su ID
+        int idUsuarioABuscar = 1; // Cambia este valor al ID que
+        //quieres buscar
+        usuario usuarioEncontrado = usuarioDAO.obtenerUsuario(idUsuarioABuscar);
+        
+
+
+         /* List<usuario> usuarios = usuarioDAO.obtenerUsuarios();
          for (usuario usuario : usuarios) {
              System.out.println("ID: " + usuario.getIdUsuario() );
              System.out.println("Nombre: " + usuario.getNombre());
@@ -22,7 +29,7 @@ public class TestUsuarioDAO {
         //UsuarioDAO usuarioDAO = new UsuarioDAO();
 
         // agregar un nuevo usuario al objeto UsuarioDAO
-        /* 
+        
         usuarioDAO.setNombre("Juan");
         usuarioDAO.setApellidoPaterno("Pérez");
         usuarioDAO.setApellidoMaterno("Gómez");

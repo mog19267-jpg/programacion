@@ -124,7 +124,7 @@ public class UsuarioDAO extends usuario implements interfaceCRUDusuario {
     public boolean eliminarUsuario(int idUsuario) {
         if (conexionDB.conectar()) {
             try {
-                callableStatement = conexionDB.getConexion().prepareCall("call bd_sistema_login.sp_eliminar_Usuario(?");
+                callableStatement = conexionDB.getConexion().prepareCall("call bd_sistema_login.sp_eliminar_Usuario(?)");
                 callableStatement.setInt(1, idUsuario);
 
                 int filasAfectadas = callableStatement.executeUpdate();
@@ -152,7 +152,7 @@ public class UsuarioDAO extends usuario implements interfaceCRUDusuario {
 
         if (conexionDB.conectar()) {
             try {
-                callableStatement = conexionDB.getConexion().prepareCall("call bd_sistema_login.sp_consultarid(?);");
+                callableStatement = conexionDB.getConexion().prepareCall("call bd_sistema_login.sp_consultarid(?)");
                 callableStatement.setInt(1, idUsuario);
                 resultSet = callableStatement.executeQuery();
 
